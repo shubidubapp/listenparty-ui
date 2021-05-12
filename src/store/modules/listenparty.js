@@ -59,15 +59,22 @@ const actions = {
         state.streamUpdaterInterval == null
       ) {
         state.streamUpdaterInterval = setInterval(
-          () => dispatch("updateStream"),
+          () => dispatch("streamerUpdate"),
           5000
         );
       } else if (
-        state.status.activity != "STREAM" &&
-        state.streamUpdaterInterval
+        state.status.activity == "LISTEN" &&
+        state.streamUpdaterInterval == null
       ) {
-        clearInterval(state.streamUpdaterInterval);
-        state.streamUpdaterInterval = null;
+        state.streamUpdaterInterval = setInterval(
+          () => dispatch("updateStatus"),
+          10000
+        );
+      } else if (
+        state.status.activity == "NONE" &&
+        state.streamUpdaterInterval != null
+      ) {
+        commit("clearStreamInterval");
       }
     }
   },
@@ -93,7 +100,7 @@ const actions = {
   stop: async ({ dispatch }) => {
     socket.emit("stop", (data) => dispatch("handleSocketResponse", data));
   },
-  updateStream: async ({ dispatch, state }) => {
+  streamerUpdate: async ({ dispatch, state }) => {
     const playbackStatus = await spotifyWebAPI.getState();
     if (!playbackStatus) return;
     const stream_data = {
@@ -109,7 +116,7 @@ const actions = {
       track_uri: playbackStatus.item.uri,
     };
     socket.emit(
-      "update_stream",
+      "streamer_update",
       { stream_name: state.status.stream, stream_data: stream_data },
       (data) => dispatch("handleSocketResponse", data)
     );
@@ -117,7 +124,7 @@ const actions = {
   updateStatus: async ({ dispatch }) => {
     socket.emit("status", (data) => dispatch("handleSocketResponse", data));
   },
-  socket_update_stream: async ({ dispatch }, data) => {
+  socket_listenerUpdate: async ({ dispatch }, data) => {
     const playbackStatus = await spotifyWebAPI.getState();
     let device = null;
 
@@ -189,6 +196,10 @@ const mutations = {
   },
   removeMessage: (state, which) => {
     state.messages.splice(which, 1);
+  },
+  clearStreamInterval: (state) => {
+    clearInterval(state.streamUpdaterInterval);
+    state.streamUpdaterInterval = null;
   },
 };
 
