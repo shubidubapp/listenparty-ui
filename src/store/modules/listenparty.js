@@ -170,6 +170,9 @@ const actions = {
   socket_connect: async ({ dispatch }) => {
     dispatch("updateStatus");
   },
+  socket_response: async ({ dispatch }, data) => {
+    dispatch("handleSocketResponse", data);
+  },
 };
 
 const mutations = {
