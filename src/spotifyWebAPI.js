@@ -17,7 +17,7 @@ class spotifyWebAPI {
     if (config == undefined || config == null) {
       config = { headers: { Authorization: `Bearer ${this.spotifyToken}` } };
     } else {
-      config.headers.Authorization = `Bearer ${this.spotifyToken}`;
+      config.headers = { Authorization: `Bearer ${this.spotifyToken}` };
     }
     return config;
   }
@@ -36,7 +36,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response.status && error.status == 401) {
+      if (error.response && error.response.status && error.status == 401) {
         this.tokenGetter();
         const { data } = await this.axios.get(
           `${apiURL}/${target}`,
@@ -65,7 +65,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response.status && error.status == 401) {
+      if (error.response && error.response.status && error.status == 401) {
         this.tokenGetter();
         const { data } = await this.axios.post(
           `${apiURL}/${target}`,
@@ -95,7 +95,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response.status && error.status == 401) {
+      if (error.response && error.response.status && error.status == 401) {
         console.log("Got 401 trying to get new Token.");
         this.tokenGetter();
         const { data } = await this.axios.put(
