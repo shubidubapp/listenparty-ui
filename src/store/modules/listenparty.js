@@ -10,43 +10,19 @@ const _ = (target) => `${baseURL}/${target}`;
 
 const state = {
   spotifyToken: null,
-  loggedIn: false,
   messages: [],
-  status: { activity: "NONE", username: "" },
+  status: { activity: "NONE", username: null },
   streamUpdaterInterval: null,
 };
 
 const getters = {
   loginUrl: () => _("api/login"),
   logoutUrl: () => _("api/logout"),
-  loggedIn: (state) => state.loggedIn,
   getMessages: (state) => state.messages,
   status: (state) => state.status,
 };
 
 const actions = {
-  checkLogin: async ({ commit, dispatch }) => {
-    const { data } = await axios.get(_("api/logged-in"));
-
-    // if logged in and socket is not connected. connect.
-    // if not logged in and socket is connected. disconnect.
-    if (data.loggedIn && !socket.connected) {
-      socket.connect();
-    } else if (!data.loggedIn && socket.connected) {
-      socket.disconnect();
-    }
-
-    if (data.loggedIn && spotifyWebAPI.spotifyToken == null) {
-      dispatch("refreshSpotifyToken");
-      spotifyWebAPI.tokenGetter = () => {
-        dispatch("refreshSpotifyToken");
-      };
-    } else {
-      spotifyWebAPI.tokenGetter = null;
-    }
-
-    commit("setLoggedIn", data.loggedIn);
-  },
   refreshSpotifyToken: async () => {
     const { data } = await axios.get(_("api/access_token"));
     spotifyWebAPI.spotifyToken = data.access_token;
@@ -54,6 +30,22 @@ const actions = {
   handleSocketResponse: ({ commit, state, dispatch }, data) => {
     commit("handleSocketResponse", data);
     if (data && data.status) {
+      // if logged in and socket is not connected. connect.
+      // if not logged in and socket is connected. disconnect.
+      if (data.status.username && !socket.connected) {
+        socket.connect();
+      } else if (!data.status.username && socket.connected) {
+        socket.disconnect();
+      }
+
+      if (data.status.username && spotifyWebAPI.spotifyToken == null) {
+        dispatch("refreshSpotifyToken");
+        spotifyWebAPI.tokenGetter = () => {
+          dispatch("refreshSpotifyToken");
+        };
+      } else {
+        spotifyWebAPI.tokenGetter = null;
+      }
       if (
         state.status.activity == "STREAM" &&
         state.streamUpdaterInterval == null
@@ -122,7 +114,8 @@ const actions = {
     );
   },
   updateStatus: async ({ dispatch }) => {
-    socket.emit("status", (data) => dispatch("handleSocketResponse", data));
+    const { data } = await axios.get(_("api/status"));
+    dispatch("handleSocketResponse", data);
   },
   socket_listenerUpdate: async ({ dispatch }, data) => {
     const playbackStatus = await spotifyWebAPI.getState();
@@ -174,7 +167,7 @@ const actions = {
     }
     dispatch("handleSocketResponse", { status: status });
   },
-  socket_connect: async ({ dispatch }) => {
+  socket_disconnect: async ({ dispatch }) => {
     dispatch("updateStatus");
   },
   socket_response: async ({ dispatch }, data) => {
@@ -183,7 +176,6 @@ const actions = {
 };
 
 const mutations = {
-  setLoggedIn: (state, loggedIn) => (state.loggedIn = loggedIn),
   handleSocketResponse: (state, data) => {
     if (!data) return;
     if (data.status) state.status = data.status;

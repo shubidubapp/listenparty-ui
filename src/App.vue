@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import Header from "./components/Header";
 import LoggedInContent from "./components/LoggedInContent";
 import ActiveContent from "./components/ActiveContent";
@@ -51,7 +51,7 @@ export default {
     AlertTicker,
   },
   computed: {
-    ...mapGetters(["status", "getMessages", "loggedIn"]),
+    ...mapGetters(["status", "getMessages"]),
   },
 };
 </script>

@@ -21,7 +21,7 @@
       Login using Spotify
     </LButton>
     <LButton @click.prevent="LClicked" v-else :href="logoutUrl" class="logout">
-      {{ status.username ? status.username : "..." }}
+      {{ status.username }}
     </LButton>
   </div>
 </template>
@@ -40,20 +40,19 @@ export default {
     LButton,
   },
   methods: {
-    ...mapActions(["checkLogin"]),
+    ...mapActions(["updateStatus"]),
     LClicked(event) {
       const newWindow = window.open(event.target.href, event.target.target);
       newWindow.onunload = () => {
-        this.checkLogin();
+        this.updateStatus();
       };
     },
   },
   computed: {
-    ...mapGetters(["loginUrl", "loggedIn", "logoutUrl", "status"]),
+    ...mapGetters(["loginUrl", "logoutUrl", "status"]),
   },
   created() {
-    this.checkLogin();
-    this.logoutText = status.username;
+    this.updateStatus();
   },
 };
 </script>
