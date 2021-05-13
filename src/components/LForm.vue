@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="submit">
     <div class="row mb-3">
-      <label for="streamNameInput" class="col-sm-2 col-form-label">
+      <label for="streamNameInput" class="col-12 col-xxl-2 col-form-label">
         Stream Name
       </label>
-      <div class="col-sm-10">
+      <div class="col-12 col-xxl-10">
         <input
           type="text"
           class="form-control"
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-sm offset-sm-2 d-flex justify-content-center mb-3">
+      <div class="col-sm d-flex justify-content-center mb-3">
         <button class="btn btn-primary mx-auto" value="listen" type="submit">
           Listen!
         </button>

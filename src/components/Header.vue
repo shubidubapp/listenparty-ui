@@ -1,8 +1,8 @@
 <template>
-  <div class="col text-start">
+  <div class="col-6 col-md">
     <span class="nav-item navbar-brand text-success">listenParty</span>
   </div>
-  <div class="nav-item col text-center">
+  <div class="col-12 col-md nav-item text-center order-2">
     <span class="badge bg-secondary" v-if="status.activity == 'NONE'">
       <fai :icon="['fas', 'times-circle']" />
       You are inactive
@@ -16,8 +16,8 @@
       You are streaming to {{ status.stream }}
     </span>
   </div>
-  <div class="nav-item col text-end">
-    <LButton @click.prevent="LClicked" :href="loginUrl" v-if="!loggedIn">
+  <div class="col-6 col-md nav-item text-end order-md-3">
+    <LButton @click.prevent="LClicked" :href="loginUrl" v-if="!status.username">
       Login using Spotify
     </LButton>
     <LButton @click.prevent="LClicked" v-else :href="logoutUrl" class="logout">

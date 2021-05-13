@@ -1,16 +1,19 @@
 <template>
-  <div class="px-2 navbar navbar-light bg-light fixed-top">
+  <div class="px-2 navbar navbar-light bg-light mb-4">
     <Header />
   </div>
   <div class="container">
     <div class="row">
-      <transition name="content" mode="out-in">
-        <div class="card" v-if="loggedIn && status.activity == 'NONE'">
+      <transition name="content-card" mode="out-in">
+        <div class="card" v-if="status.username && status.activity == 'NONE'">
           <div class="card-body">
             <LoggedInContent />
           </div>
         </div>
-        <div class="card" v-else-if="loggedIn && status.activity != 'NONE'">
+        <div
+          class="card"
+          v-else-if="status.username && status.activity != 'NONE'"
+        >
           <div class="card-body">
             <ActiveContent />
           </div>
@@ -22,8 +25,10 @@
         </div>
       </transition>
     </div>
-    <div class="row fixed-bottom mx-5">
-      <Alerts />
+    <div class="row fixed-bottom">
+      <div class="col-12 col-lg-4 offset-lg-4">
+        <Alerts />
+      </div>
     </div>
   </div>
 </template>
@@ -63,19 +68,17 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 80px;
 }
 
-.content-enter-active,
-.content-leave-active {
+.content-card-enter-active,
+.content-card-leave-active {
   transition: all 1s ease;
 }
-.content-enter-from {
+.content-card-enter-from {
   opacity: 0;
   transform: translateX(100px);
 }
-.content-leave-to {
+.content-card-leave-to {
   opacity: 0;
   transform: translateX(-100px);
 }
