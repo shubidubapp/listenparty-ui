@@ -26,14 +26,14 @@ export default {
 <style scoped>
 .messages-enter-active,
 .messages-leave-active {
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
 }
 .messages-enter-from {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(50px);
 }
 .messages-leave-to {
   opacity: 0;
-  transform: translateX(-30px);
+  transform: translateX(-50px);
 }
 </style>
