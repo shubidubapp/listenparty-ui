@@ -27,7 +27,7 @@
     </div>
     <div class="row fixed-bottom">
       <div class="col-12 col-lg-4 offset-lg-4">
-        <Alerts />
+        <AlertTicker />
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@ import Header from "./components/Header";
 import LoggedInContent from "./components/LoggedInContent";
 import ActiveContent from "./components/ActiveContent";
 import NotLoggedInContent from "./components/NotLoggedInContent";
-import Alerts from "./components/Alerts";
+import AlertTicker from "./components/AlertTicker";
 
 export default {
   name: "App",
@@ -48,10 +48,7 @@ export default {
     LoggedInContent,
     ActiveContent,
     NotLoggedInContent,
-    Alerts,
-  },
-  methods: {
-    ...mapActions(["checkLogin"]),
+    AlertTicker,
   },
   computed: {
     ...mapGetters(["status", "getMessages", "loggedIn"]),
