@@ -21,8 +21,7 @@
       Login using Spotify
     </LButton>
     <LButton @click.prevent="LClicked" v-else :href="logoutUrl" class="logout">
-      <span v-if="status.username">{{ status.username }}</span>
-      <span v-else>...</span>
+      {{ status.username ? status.username : "..." }}
     </LButton>
   </div>
 </template>
