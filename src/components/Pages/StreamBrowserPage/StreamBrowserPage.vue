@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import LForm from "./LForm";
+import LForm from "./StreamForm/LForm";
 
 export default {
   data: () => {

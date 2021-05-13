@@ -28,7 +28,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import LButton from "./LButton";
+import LButton from "./commons/LButton";
 
 export default {
   data: () => {

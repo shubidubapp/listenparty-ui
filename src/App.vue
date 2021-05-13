@@ -7,7 +7,7 @@
       <transition name="content-card" mode="out-in">
         <div class="card" v-if="status.username && status.activity == 'NONE'">
           <div class="card-body">
-            <LoggedInContent />
+            <StreamBrowserPage />
           </div>
         </div>
         <div
@@ -15,12 +15,12 @@
           v-else-if="status.username && status.activity != 'NONE'"
         >
           <div class="card-body">
-            <ActiveContent />
+            <ActiveStreamPage />
           </div>
         </div>
         <div class="card" v-else>
           <div class="card-body">
-            <NotLoggedInContent />
+            <IndexPage />
           </div>
         </div>
       </transition>
@@ -36,18 +36,18 @@
 <script>
 import { mapGetters } from "vuex";
 import Header from "./components/Header";
-import LoggedInContent from "./components/LoggedInContent";
-import ActiveContent from "./components/ActiveContent";
-import NotLoggedInContent from "./components/NotLoggedInContent";
-import AlertTicker from "./components/AlertTicker";
+import StreamBrowserPage from "./components/Pages/StreamBrowserPage/StreamBrowserPage";
+import ActiveStreamPage from "./components/Pages/ActiveStreamPage/ActiveStreamPage";
+import IndexPage from "./components/Pages/IndexPage/IndexPage";
+import AlertTicker from "./components/Alerts/AlertTicker";
 
 export default {
   name: "App",
   components: {
     Header,
-    LoggedInContent,
-    ActiveContent,
-    NotLoggedInContent,
+    StreamBrowserPage,
+    ActiveStreamPage,
+    IndexPage,
     AlertTicker,
   },
   computed: {

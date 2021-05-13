@@ -50,5 +50,11 @@ export default {
       }
     },
   },
+  watch: {
+    streamName_() {
+      this.streamName = this.streamName_;
+    },
+  },
+  props: ["streamName_"],
 };
 </script>
