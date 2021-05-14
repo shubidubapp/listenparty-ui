@@ -24,12 +24,13 @@
 
 <script>
 import { mapMutations } from "vuex";
-const countDownSeconds = 5;
+import { constants } from "../../utils";
+
 export default {
   data: () => {
     return {
       statusClass: null,
-      countDown: countDownSeconds,
+      countDown: constants.alertFadeTimer,
       pauseCountDown: false,
       countInterval: null,
       fade: false,
@@ -45,7 +46,7 @@ export default {
       if (!this.pauseCountDown) {
         this.countDown--;
       } else {
-        this.countDown = countDownSeconds;
+        this.countDown = constants.alertFadeTimer;
       }
 
       if (this.countDown == 0) this.dismissMessage();
@@ -57,7 +58,10 @@ export default {
       this.message.status == "OK" ? "alert-success" : "alert-danger";
   },
   mounted() {
-    this.$el.style.setProperty("--fade-duration", `${countDownSeconds}s`);
+    this.$el.style.setProperty(
+      "--fade-duration",
+      `${constants.alertFadeTimer}s`
+    );
     this.countInterval = setInterval(this.counter, 1000);
   },
   beforeUnmount() {
