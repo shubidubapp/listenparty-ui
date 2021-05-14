@@ -43,7 +43,7 @@ export default {
     },
     counter() {
       this.fade = true;
-      if (!this.pauseCountDown) {
+      if (!this.pauseCountDown && this.userActive) {
         this.countDown--;
       } else {
         this.countDown = constants.alertFadeTimer;
@@ -52,7 +52,7 @@ export default {
       if (this.countDown == 0) this.dismissMessage();
     },
   },
-  props: ["message", "index"],
+  props: ["message", "index", "userActive"],
   created() {
     this.statusClass =
       this.message.status == "OK" ? "alert-success" : "alert-danger";

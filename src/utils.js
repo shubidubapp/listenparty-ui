@@ -5,6 +5,7 @@ export const APIUrlGen = (target) => `${baseURL}/${target}`;
 export const constants = {
   // Alerts
   alertFadeTimer: 5,
+  inactiveTimer: 5,
 
   // StreamListPage
   streamListWindowSize: 5,
