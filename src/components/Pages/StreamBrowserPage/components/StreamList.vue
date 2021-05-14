@@ -56,6 +56,7 @@
         style="max-height: 400px"
         @scroll.passive="scrollUpdate"
         @click.capture.prevent="clickCapture"
+        v-if="streamList.length > 0"
       >
         <a
           class="list-group-item list-group-item-action"
@@ -66,6 +67,10 @@
           <StreamInfo :stream="s" />
         </a>
       </ul>
+      <div v-else class="card-text fw-bold">
+        <p>There are no active streams.</p>
+        <p class="mb-0">Why don't you start one?</p>
+      </div>
     </div>
   </div>
 </template>
