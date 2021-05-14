@@ -7,6 +7,6 @@ export const constants = {
   alertFadeTimer: 5,
 
   // StreamListPage
-  streamListWindowSize: 15,
+  streamListWindowSize: 5,
   streamListUpdateInterval: 5000, //ms
 };

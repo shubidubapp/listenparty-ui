@@ -1,12 +1,7 @@
 import axios from "axios";
 import socket from "../../socket-client";
 import spotifyWebAPI from "../../spotifyWebAPI";
-
-axios.defaults.withCredentials = true; // makes axios send and receive cookies
-
-const baseURL = process.env.VUE_APP_BASEURL;
-
-const _ = (target) => `${baseURL}/${target}`;
+import { APIUrlGen as _ } from "../../utils";
 
 const state = {
   spotifyToken: null,
@@ -16,8 +11,6 @@ const state = {
 };
 
 const getters = {
-  loginUrl: () => _("api/login"),
-  logoutUrl: () => _("api/logout"),
   getMessages: (state) => state.messages,
   status: (state) => state.status,
 };
@@ -192,6 +185,9 @@ const mutations = {
   clearStreamInterval: (state) => {
     clearInterval(state.streamUpdaterInterval);
     state.streamUpdaterInterval = null;
+  },
+  appendStreamList: (state, data) => {
+    state.streamList.push(...data);
   },
 };
 

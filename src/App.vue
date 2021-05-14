@@ -79,4 +79,37 @@ body {
   opacity: 0;
   transform: translateX(-100px);
 }
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.badge {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* SCROLLBAR STYLES */
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  /* scrollbar-color: darkslategray unset; */
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* *::-webkit-scrollbar-track {
+  background: orange;
+} */
+
+*::-webkit-scrollbar-thumb {
+  /* background-color: blue; */
+  border-radius: 20px;
+  border: 3px solid;
+}
 </style>

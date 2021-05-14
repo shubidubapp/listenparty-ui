@@ -29,11 +29,14 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import LButton from "./commons/LButton";
+import { APIUrlGen as _ } from "../utils";
 
 export default {
   data: () => {
     return {
       logoutHover: false,
+      loginUrl: _("api/login"),
+      logoutUrl: _("api/logout"),
     };
   },
   components: {
@@ -49,7 +52,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["loginUrl", "logoutUrl", "status"]),
+    ...mapGetters(["status"]),
   },
   created() {
     this.updateStatus();

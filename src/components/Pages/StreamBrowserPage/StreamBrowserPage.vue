@@ -3,29 +3,28 @@
     <div class="col-12 col-lg-8 gx-2 g-lg-4 mb-4">
       <div class="card">
         <div class="card-body">
-          <LForm />
+          <LForm v-model:stream-name_="seletectedStream" />
         </div>
       </div>
     </div>
     <div class="col-12 col-lg-4 gx-2 g-lg-4">
-      <div class="card">
-        <div class="card-header">Active Streams</div>
-        <div class="card-body">...</div>
-      </div>
+      <StreamList v-model:selected="seletectedStream" />
     </div>
   </div>
 </template>
 
 <script>
-import LForm from "./StreamForm/LForm";
+import LForm from "./components/Form";
+import StreamList from "./components/StreamList";
 
 export default {
   data: () => {
     return {
       logoutHover: false,
+      seletectedStream: "",
     };
   },
-  components: { LForm },
+  components: { LForm, StreamList },
   methods: {},
   computed: {},
 };

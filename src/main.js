@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import VueSocketIOExt from "vue-socket.io-extended";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
 import App from "./App.vue";
 import socket from "./socket-client";
@@ -15,6 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrophoneAlt, faHeadphonesAlt, faTimesCircle);
+
+axios.defaults.withCredentials = true; // makes axios send and receive cookies
 
 const app = createApp(App);
 app.use(store);
