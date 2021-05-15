@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <div class="user-select-none">Active Streams({{ streamCount }})</div>
+      <div class="user-select-none">Listeners({{ listenerCount }})</div>
       <div
         class="spinner-border text-secondary"
         v-show="isLoading"
@@ -23,7 +23,7 @@
           &lt;
         </button>
         <span>
-          {{ firstDBIndex }} - {{ firstDBIndex + streamList_.length }}
+          {{ firstDBIndex }} - {{ firstDBIndex + listenerList.length }}
         </span>
         <button
           :class="[
@@ -47,7 +47,7 @@
           id="filter"
           v-model="searchText"
           @change="firstDBIndex = 0"
-          placeholder="Filter Streams"
+          placeholder="Filter Listeners"
         />
       </form>
     </div>
@@ -56,21 +56,20 @@
         class="list-group list-group-flush overflow-auto"
         style="max-height: 400px"
         @scroll.passive="scrollUpdate"
-        @click.capture.prevent="clickCapture"
-        v-if="streamList.length > 0"
+        v-if="listenerList.length > 0"
       >
         <a
           class="list-group-item list-group-item-action"
-          v-for="s in streamList"
-          :key="s.pk"
-          :name="s.name"
+          v-for="l in listenerList"
+          :key="l.pk"
+          :name="l.name"
         >
-          <StreamInfo :stream="s" />
+          <UserInfo :listener="l" />
         </a>
       </ul>
       <div v-else class="card-text fw-bold">
-        <p>There are no active streams.</p>
-        <p class="mb-0">Why don't you start one?</p>
+        <p class="fw-normal" v-if="searchText.length > 0">¯\_(ツ)_/¯</p>
+        <p v-else>This is a lonely party.</p>
       </div>
     </div>
   </div>
@@ -79,15 +78,15 @@
 <script>
 import { constants, APIUrlGen as _ } from "../../../../utils";
 import axios from "axios";
-import StreamInfo from "../../../commons/StreamInfo";
+import UserInfo from "../../../commons/UserInfo";
 
-const windowSize = constants.streamListWindowSize;
+const windowSize = constants.listenerListWindowSize;
 
 export default {
-  components: { StreamInfo },
+  components: { UserInfo },
   data: () => {
     return {
-      streamList_: [],
+      listenerList_: [],
       searchText: "",
       firstDBIndex: 0,
       windowSize: windowSize,
@@ -95,31 +94,27 @@ export default {
       hasNext: false,
       hasPrev: false,
       loading: false,
-      streamCount: 0,
+      listenerCount: 0,
     };
   },
   methods: {
-    async updateStreamList() {
+    async updateListenerList() {
       const params = {
         from: this.firstDBIndex,
         amount: windowSize,
         filter: this.searchText,
       };
-      const { data } = await axios.get(_("api/stream-list"), {
+      const { data } = await axios.get(_("api/listener-list"), {
         params: params,
       });
-      this.streamList_ = data.streams;
-      this.streamCount = data.stream_count;
+      this.listenerList_ = data.listeners;
+      this.listenerCount = data.listener_count;
       this.hasPrev = this.firstDBIndex > 0;
-      this.hasNext = this.firstDBIndex + windowSize < this.streamCount;
+      this.hasNext = this.firstDBIndex + windowSize < this.listenerCount;
       this.loading = false;
     },
-    clickCapture(event) {
-      const list_item = event.target.closest("a.list-group-item");
-      this.$emit("update:selected", list_item.getAttribute("name"));
-    },
     nextPage() {
-      if (this.streamList_.length < windowSize) return; // reached the end of pages
+      if (this.listenerList_.length < windowSize) return; // reached the end of pages
 
       this.firstDBIndex += this.windowSize;
       this.forceUpdate();
@@ -131,12 +126,12 @@ export default {
     },
     forceUpdate() {
       this.loading = true;
-      this.updateStreamList();
+      this.updateListenerList();
     },
   },
   computed: {
-    streamList() {
-      return this.streamList_;
+    listenerList() {
+      return this.listenerList_;
     },
     isLoading() {
       return this.loading;
@@ -144,15 +139,13 @@ export default {
   },
   created() {
     this.updateInterval = setInterval(
-      this.updateStreamList,
-      constants.streamListUpdateInterval
+      this.updateListenerList,
+      constants.listenerListUpdateInterval
     );
-    this.updateStreamList();
+    this.updateListenerList();
   },
   beforeUnmount() {
     clearInterval(this.updateInterval);
   },
-  props: ["selected"],
-  emits: ["update:selected"],
 };
 </script>

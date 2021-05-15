@@ -13,9 +13,17 @@ import {
   faMicrophoneAlt,
   faHeadphonesAlt,
   faTimesCircle,
+  faVolumeUp,
+  faVolumeMute,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faMicrophoneAlt, faHeadphonesAlt, faTimesCircle);
+library.add(
+  faMicrophoneAlt,
+  faHeadphonesAlt,
+  faTimesCircle,
+  faVolumeUp,
+  faVolumeMute
+);
 
 axios.defaults.withCredentials = true; // makes axios send and receive cookies
 

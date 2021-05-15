@@ -88,7 +88,7 @@ class spotifyWebAPI {
    */
   async put(target, requestData, config) {
     try {
-      const { data } = await this.axios.put(
+      const data = await this.axios.put(
         `${apiURL}/${target}`,
         requestData,
         this._setAuth(config)
@@ -98,7 +98,7 @@ class spotifyWebAPI {
       if (error.response && error.response.status && error.status == 401) {
         console.log("Got 401 trying to get new Token.");
         this.tokenGetter();
-        const { data } = await this.axios.put(
+        const data = await this.axios.put(
           `${apiURL}/${target}`,
           requestData,
           this._setAuth(config)

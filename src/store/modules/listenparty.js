@@ -1,19 +1,41 @@
 import axios from "axios";
 import socket from "../../socket-client";
 import spotifyWebAPI from "../../spotifyWebAPI";
-import { APIUrlGen as _ } from "../../utils";
+import { APIUrlGen as _, constants } from "../../utils";
 
 const state = {
   spotifyToken: null,
   messages: [],
   status: { activity: "NONE", username: null },
   streamUpdaterInterval: null,
+  stream_data: null,
 };
 
 const getters = {
   getMessages: (state) => state.messages,
   status: (state) => state.status,
+  streamData: (state) => state.stream_data,
 };
+
+function constructStreamData(playbackStatus) {
+  let track_img;
+  const images = playbackStatus.item.album.images.reverse();
+  track_img = images.find((item) => item.height > 120).url;
+  if (!track_img) track_img = playbackStatus.item.album.images[0].url;
+  return {
+    track_name: playbackStatus.item.name,
+    artists: playbackStatus.item.artists.map((x) => {
+      return x.name;
+    }),
+    duration: playbackStatus.item.duration_ms,
+    progress: playbackStatus.progress_ms,
+    volume_percent: playbackStatus.device.volume_percent,
+    timestamp: Math.floor(new Date().getTime() / 1000),
+    is_playing: playbackStatus.is_playing,
+    track_uri: playbackStatus.item.uri,
+    track_img: track_img,
+  };
+}
 
 const actions = {
   refreshSpotifyToken: async () => {
@@ -43,17 +65,19 @@ const actions = {
         state.status.activity == "STREAM" &&
         state.streamUpdaterInterval == null
       ) {
+        console.log();
         state.streamUpdaterInterval = setInterval(
           () => dispatch("streamerUpdate"),
-          5000
+          constants.streamerUpdateInterval
         );
+        dispatch("streamerUpdate");
       } else if (
         state.status.activity == "LISTEN" &&
         state.streamUpdaterInterval == null
       ) {
         state.streamUpdaterInterval = setInterval(
           () => dispatch("updateStatus"),
-          10000
+          constants.statusUpdateInterval
         );
       } else if (
         state.status.activity == "NONE" &&
@@ -85,21 +109,11 @@ const actions = {
   stop: async ({ dispatch }) => {
     socket.emit("stop", (data) => dispatch("handleSocketResponse", data));
   },
-  streamerUpdate: async ({ dispatch, state }) => {
+  streamerUpdate: async ({ dispatch, state, commit }) => {
     const playbackStatus = await spotifyWebAPI.getState();
     if (!playbackStatus) return;
-    const stream_data = {
-      track_name: playbackStatus.item.name,
-      artists: playbackStatus.item.artists.map((x) => {
-        return x.name;
-      }),
-      duration: playbackStatus.item.duration_ms,
-      progress: playbackStatus.progress_ms,
-      volume_percent: playbackStatus.device.volume_percent,
-      timestamp: playbackStatus.timestamp,
-      is_playing: playbackStatus.is_playing,
-      track_uri: playbackStatus.item.uri,
-    };
+    const stream_data = constructStreamData(playbackStatus);
+    commit("stream_data", stream_data);
     socket.emit(
       "streamer_update",
       { stream_name: state.status.stream, stream_data: stream_data },
@@ -110,8 +124,11 @@ const actions = {
     const { data } = await axios.get(_("api/status"));
     dispatch("handleSocketResponse", data);
   },
-  socket_listenerUpdate: async ({ dispatch }, data) => {
+  socket_listenerUpdate: async ({ dispatch, commit }, data) => {
     const playbackStatus = await spotifyWebAPI.getState();
+
+    commit("stream_data", constructStreamData(playbackStatus));
+
     let device = null;
 
     const { stream_data, status } = data;
@@ -188,6 +205,9 @@ const mutations = {
   },
   appendStreamList: (state, data) => {
     state.streamList.push(...data);
+  },
+  stream_data: (state, data) => {
+    state.stream_data = data;
   },
 };
 
