@@ -58,14 +58,13 @@ const actions = {
         spotifyWebAPI.tokenGetter = () => {
           dispatch("refreshSpotifyToken");
         };
-      } else {
+      } else if (!data.status.username) {
         spotifyWebAPI.tokenGetter = null;
       }
       if (
         state.status.activity == "STREAM" &&
         state.streamUpdaterInterval == null
       ) {
-        console.log();
         state.streamUpdaterInterval = setInterval(
           () => dispatch("streamerUpdate"),
           constants.streamerUpdateInterval
@@ -106,7 +105,8 @@ const actions = {
       (data) => dispatch("handleSocketResponse", data)
     );
   },
-  stop: async ({ dispatch }) => {
+  stop: async ({ dispatch, commit }) => {
+    commit("clearStreamInterval");
     socket.emit("stop", (data) => dispatch("handleSocketResponse", data));
   },
   streamerUpdate: async ({ dispatch, state, commit }) => {
