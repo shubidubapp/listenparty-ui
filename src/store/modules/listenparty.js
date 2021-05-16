@@ -9,6 +9,8 @@ const state = {
   status: { activity: "NONE", username: null },
   streamUpdaterInterval: null,
   stream_data: null,
+  webPlayerUsable: false,
+  webPlayer: null,
 };
 
 const getters = {
@@ -38,9 +40,10 @@ function constructStreamData(playbackStatus) {
 }
 
 const actions = {
-  refreshSpotifyToken: async () => {
+  refreshSpotifyToken: async (_ignore, callback) => {
     const { data } = await axios.get(_("api/access_token"));
     spotifyWebAPI.spotifyToken = data.access_token;
+    if (callback) callback(data.access_token);
   },
   handleSocketResponse: ({ commit, state, dispatch }, data) => {
     commit("handleSocketResponse", data);
@@ -124,10 +127,12 @@ const actions = {
     const { data } = await axios.get(_("api/status"));
     dispatch("handleSocketResponse", data);
   },
-  socket_listenerUpdate: async ({ dispatch, commit }, data) => {
+  socket_listenerUpdate: async ({ dispatch, commit, state }, data) => {
     const playbackStatus = await spotifyWebAPI.getState();
 
-    commit("stream_data", constructStreamData(playbackStatus));
+    if (playbackStatus) {
+      commit("stream_data", constructStreamData(playbackStatus));
+    }
 
     let device = null;
 
@@ -135,12 +140,29 @@ const actions = {
 
     if (playbackStatus == "") {
       device = await spotifyWebAPI.getAnyPlaybackDevice();
+      if (!device && state.webPlayerUsable) {
+        const player = new window.Spotify.Player({
+          name: constants.webPlayerName,
+          getOAuthToken: (callback) => {
+            dispatch("refreshSpotifyToken", callback);
+          },
+          volume: 0.3,
+        });
+        await player.connect();
+        commit("setWebPlayer", player);
+        await spotifyWebAPI.start({
+          deviceId: device,
+          uris: [stream_data.track_uri],
+          position_ms: stream_data.progress,
+        });
+      } else {
+        await spotifyWebAPI.start({
+          deviceId: device,
+          uris: [stream_data.track_uri],
+          position_ms: stream_data.progress,
+        });
+      }
 
-      await spotifyWebAPI.start({
-        deviceId: device,
-        uris: [stream_data.track_uri],
-        position_ms: stream_data.progress,
-      });
       dispatch("handleSocketResponse", { status: status });
       return;
     }
@@ -152,9 +174,10 @@ const actions = {
     }
 
     if (device == null) {
-      dispatch("stop");
+      dispatch("stop"); // this is really shouldnt be happenning
       return;
     }
+
     const timeDiff = Math.abs(
       playbackStatus.progress_ms - stream_data.progress
     );
@@ -208,6 +231,18 @@ const mutations = {
   },
   stream_data: (state, data) => {
     state.stream_data = data;
+  },
+  setwebPlayerUsable: (state, data) => {
+    state.webPlayerUsable = data;
+  },
+  setWebPlayer: (state, data) => {
+    state.webPlayer = data;
+  },
+  destroyWebPlayer: (state) => {
+    if (state.webPlayer) {
+      state.webPlayer.disconnect();
+      state.webPlayer = null;
+    }
   },
 };
 

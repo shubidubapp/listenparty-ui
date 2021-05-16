@@ -1,5 +1,5 @@
 <template>
-  <div v-if="is_playing" class="row">
+  <div v-if="now_playing" class="row">
     <div class="col-auto p-0 align-content-center">
       <img
         :src="track_img"
@@ -63,6 +63,11 @@
       </div>
     </div>
   </div>
+  <div v-else class="row">
+    <div class="col">
+      <h3>Waiting for player information...</h3>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -89,6 +94,8 @@ export default {
       else if (this.data.timestamp < streamData.timestamp) {
         this.data = streamData;
         this.lastUpdate = now;
+        if (this.volume_.val == null)
+          this.volume_.val = streamData.volume_percent;
         return;
       }
       const elapsedTime = now - this.lastUpdate;

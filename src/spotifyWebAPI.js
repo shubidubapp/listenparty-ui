@@ -6,11 +6,15 @@ class spotifyWebAPI {
   axios;
   spotifyToken = null;
   tokenGetter = null;
+  devices = [];
+  activeDevice = null;
 
   constructor() {
     this.axios = axios.create();
     this.spotifyToken = null;
     this.tokenGetter = null;
+    this.devices = [];
+    this.activeDevice = null;
   }
 
   _setAuth(config) {
@@ -36,7 +40,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response && error.response.status && error.status == 401) {
+      if (error.response && error.response.status == 401) {
         this.tokenGetter();
         const { data } = await this.axios.get(
           `${apiURL}/${target}`,
@@ -65,7 +69,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response && error.response.status && error.status == 401) {
+      if (error.response && error.response.status == 401) {
         this.tokenGetter();
         const { data } = await this.axios.post(
           `${apiURL}/${target}`,
@@ -95,8 +99,7 @@ class spotifyWebAPI {
       );
       return data;
     } catch (error) {
-      if (error.response && error.response.status && error.status == 401) {
-        console.log("Got 401 trying to get new Token.");
+      if (error.response && error.response.status == 401) {
         this.tokenGetter();
         const data = await this.axios.put(
           `${apiURL}/${target}`,
@@ -120,6 +123,7 @@ class spotifyWebAPI {
 
   async getDevices() {
     const { devices } = await this.get("me/player/devices");
+    this.devices = devices;
     return devices;
   }
 

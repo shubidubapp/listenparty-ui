@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import Header from "./components/Header";
 import StreamBrowserPage from "./components/Pages/StreamBrowserPage/StreamBrowserPage";
 import ActiveStreamPage from "./components/Pages/ActiveStreamPage/ActiveStreamPage";
@@ -50,8 +50,19 @@ export default {
     IndexPage,
     AlertTicker,
   },
+  methods: {
+    ...mapMutations(["setwebPlayerUsable", "destroyWebPlayer"]),
+  },
   computed: {
     ...mapGetters(["status", "getMessages"]),
+  },
+  created() {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      this.setwebPlayerUsable(true);
+    };
+  },
+  beforeUnmount() {
+    this.destroyWebPlayer();
   },
 };
 </script>

@@ -17,11 +17,19 @@
     </span>
   </div>
   <div class="col-6 col-md nav-item text-end order-md-3">
-    <LButton @click.prevent="LClicked" :href="loginUrl" v-if="!status.username">
+    <LButton @click.capture.prevent="login" v-if="!status.username">
       Login using Spotify
     </LButton>
-    <LButton @click.prevent="LClicked" v-else :href="logoutUrl" class="logout">
-      {{ status.username }}
+    <LButton
+      @click.capture.prevent="logout"
+      @mouseenter="hover = !hover"
+      @mouseleave="hover = !hover"
+      v-else
+      class="logout"
+    >
+      <div class="text-wrap" style="width: 120px">
+        {{ hover ? "Logout" : status.username }}
+      </div>
     </LButton>
   </div>
 </template>
@@ -37,6 +45,7 @@ export default {
       logoutHover: false,
       loginUrl: _("api/login"),
       logoutUrl: _("api/logout"),
+      hover: false,
     };
   },
   components: {
@@ -44,11 +53,15 @@ export default {
   },
   methods: {
     ...mapActions(["updateStatus"]),
-    LClicked(event) {
-      const newWindow = window.open(event.target.href, event.target.target);
-      newWindow.onunload = () => {
-        this.updateStatus();
-      };
+    loginout(href) {
+      const newWindow = window.open(href, "_blank");
+      newWindow.addEventListener("onunload", this.updateStatus);
+    },
+    login() {
+      this.loginout(this.loginUrl);
+    },
+    logout() {
+      this.loginout(this.logoutUrl);
     },
   },
   computed: {
