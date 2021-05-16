@@ -16,6 +16,13 @@
             <fai v-else :icon="['fas', 'headphones-alt']" />
             {{ status.stream }}
           </div>
+          <a
+            class="btn btn-success"
+            :href="`?l=${status.stream}`"
+            @click.prevent="copyShareURL"
+          >
+            Copy Listen URL!
+          </a>
           <button class="btn btn-danger" @click.prevent="stop">Stop!</button>
         </div>
         <div class="card-body"><Player /></div>
@@ -28,9 +35,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import ListenerList from "./components/ListenerList";
 import Player from "./components/Player";
+import { copyToClipboard } from "../../../utils";
 
 export default {
   data: () => {
@@ -41,6 +49,23 @@ export default {
   components: { ListenerList, Player },
   methods: {
     ...mapActions(["stop"]),
+    ...mapMutations(["addAlert"]),
+    copyShareURL(event) {
+      let result = copyToClipboard({ textContent: event.target.href });
+      if (result) {
+        this.addAlert({
+          text: "Sharing url is copied to clipboard!",
+          status: "OK",
+          time: Math.floor(new Date().getTime() / 1000),
+        });
+      } else {
+        this.addAlert({
+          text: "Can not copy to clipboard, please right click and copy url.",
+          status: "ERROR",
+          time: Math.floor(new Date().getTime() / 1000),
+        });
+      }
+    },
   },
   computed: {
     ...mapGetters(["status"]),

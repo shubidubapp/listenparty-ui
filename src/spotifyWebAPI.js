@@ -6,8 +6,6 @@ class spotifyWebAPI {
   axios;
   spotifyToken = null;
   tokenGetter = null;
-  devices = [];
-  activeDevice = null;
 
   constructor() {
     this.axios = axios.create();
