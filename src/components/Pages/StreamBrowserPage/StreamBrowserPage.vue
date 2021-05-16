@@ -17,6 +17,7 @@
 <script>
 import LForm from "./components/Form";
 import StreamList from "./components/StreamList";
+import { getURLParameterByName } from "../../../utils";
 
 export default {
   data: () => {
@@ -28,5 +29,13 @@ export default {
   components: { LForm, StreamList },
   methods: {},
   computed: {},
+  mounted() {
+    const listenParam =
+      getURLParameterByName("listen") || getURLParameterByName("l");
+    const streamParam =
+      getURLParameterByName("stream") || getURLParameterByName("s");
+    this.seletectedStream = listenParam || streamParam;
+    window.history.pushState({}, document.title, "/");
+  },
 };
 </script>

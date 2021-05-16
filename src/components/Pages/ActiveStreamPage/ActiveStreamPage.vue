@@ -48,5 +48,12 @@ export default {
       return this.status.activity == "STREAM";
     },
   },
+  created() {
+    window.history.pushState(
+      {},
+      document.title,
+      `?${this.status.activity.toLowerCase()}=${this.status.stream}`
+    );
+  },
 };
 </script>

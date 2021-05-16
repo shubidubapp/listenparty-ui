@@ -213,9 +213,6 @@ const mutations = {
     if (!data) return;
     if (data.status) state.status = data.status;
     if (data.message) {
-      if (state.messages.length > 3) {
-        state.messages.splice(0, 1);
-      }
       state.messages.push(data.message);
     }
   },
@@ -243,6 +240,9 @@ const mutations = {
       state.webPlayer.disconnect();
       state.webPlayer = null;
     }
+  },
+  addAlert: (state, message) => {
+    state.messages.push(message);
   },
 };
 
