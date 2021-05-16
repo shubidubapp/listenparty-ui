@@ -28,6 +28,9 @@ export default {
   },
   computed: {
     ...mapGetters(["getMessages"]),
+    messages() {
+      return this.getMessages().slice(3);
+    },
   },
   methods: {
     inactiveCounter() {
