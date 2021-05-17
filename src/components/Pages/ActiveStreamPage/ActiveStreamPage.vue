@@ -10,20 +10,24 @@
               'user-select-none',
               'fw-bold',
               isStreamer ? 'text-danger' : 'text-success',
+              'd-flex',
+              'align-items-center',
             ]"
           >
             <fai v-if="isStreamer" :icon="['fas', 'microphone-alt']" />
             <fai v-else :icon="['fas', 'headphones-alt']" />
-            {{ status.stream }}
+            <div class="ms-1">{{ status.stream }}</div>
           </div>
           <a
-            class="btn btn-success"
+            class="btn btn-success d-flex"
             :href="`?l=${status.stream}`"
             @click.prevent="copyShareURL"
           >
-            Copy Listen URL!
+            Copy URL
           </a>
-          <button class="btn btn-danger" @click.prevent="stop">Stop!</button>
+          <button class="btn btn-danger d-flex" @click.prevent="stop">
+            Stop!
+          </button>
         </div>
         <div class="card-body"><Player /></div>
       </div>

@@ -6,6 +6,7 @@ import { APIUrlGen as _, constants } from "../../utils";
 const state = {
   spotifyToken: null,
   messages: [],
+  chatMessages: [],
   status: { activity: "NONE", username: null },
   streamUpdaterInterval: null,
   stream_data: null,
@@ -56,6 +57,7 @@ const actions = {
         socket.disconnect();
       }
 
+      // if logged in and spotify web api is not initialized init web api
       if (data.status.username && spotifyWebAPI.spotifyToken == null) {
         dispatch("refreshSpotifyToken");
         spotifyWebAPI.tokenGetter = () => {
@@ -64,6 +66,10 @@ const actions = {
       } else if (!data.status.username) {
         spotifyWebAPI.tokenGetter = null;
       }
+
+      // if streaming and stream updater is not running. run stream updater
+      // if listening and status updater is not running run status updater regularly to keep up with changes
+      // if activity is none but any updater is running. stop it.
       if (
         state.status.activity == "STREAM" &&
         state.streamUpdaterInterval == null
@@ -111,6 +117,11 @@ const actions = {
   stop: async ({ dispatch, commit }) => {
     commit("clearStreamInterval");
     socket.emit("stop", (data) => dispatch("handleSocketResponse", data));
+  },
+  sendChatMessage: async ({ dispatch }, message) => {
+    socket.emit("chat_message", message, (data) =>
+      dispatch("handleSocketResponse", data)
+    );
   },
   streamerUpdate: async ({ dispatch, state, commit }) => {
     const playbackStatus = await spotifyWebAPI.getState();
@@ -200,11 +211,18 @@ const actions = {
     }
     dispatch("handleSocketResponse", { status: status });
   },
-  socket_disconnect: async ({ dispatch }) => {
+  socket_disconnect: async ({ dispatch }, data) => {
+    dispatch("handleSocketResponse", data);
     dispatch("updateStatus");
   },
   socket_response: async ({ dispatch }, data) => {
     dispatch("handleSocketResponse", data);
+  },
+  socket_status: async ({ dispatch }, data) => {
+    dispatch("handleSocketResponse", data);
+  },
+  socket_chatMessage: async ({ commit }, data) => {
+    commit("handleSocketResponse", data);
   },
 };
 
@@ -214,6 +232,13 @@ const mutations = {
     if (data.status) state.status = data.status;
     if (data.message) {
       state.messages.push(data.message);
+    }
+    if (data.chatMessage) {
+      if (Array.isArray(data.chatMessage)) {
+        state.chatMessages.push(...data.chatMessage);
+      } else {
+        state.chatMessages.push(data.chatMessage);
+      }
     }
   },
   removeMessage: (state, which) => {
