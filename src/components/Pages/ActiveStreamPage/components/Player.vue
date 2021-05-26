@@ -161,6 +161,11 @@ export default {
       },
     },
   },
+  sockets: {
+    add_queue(data) {
+      spotifyWebAPI.addQueue(data.track);
+    },
+  },
   created() {
     if (this.updatePlayerInterval == null) {
       this.updatePlayerInterval = setInterval(

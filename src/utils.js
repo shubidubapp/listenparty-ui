@@ -89,4 +89,13 @@ export const constants = {
 
   // spotify web player
   webPlayerName: "ListenParty Spotify Player",
+
+  ActionType: {
+    // keep at top
+    message: 1,
+    add_dj: 2,
+    add_queue: 3,
+    // keep at bottom
+    error: 4,
+  },
 };

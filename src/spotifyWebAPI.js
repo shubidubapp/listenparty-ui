@@ -158,6 +158,16 @@ class spotifyWebAPI {
   async setVolume(volume_percent) {
     return this.put("me/player/volume", null, { params: { volume_percent } });
   }
+  async getTrack(track_id) {
+    return this.get(`tracks/${track_id}`);
+  }
+  async addQueue(track_id) {
+    return this.post(`me/player/queue`, null, {
+      params: {
+        uri: `spotify:track:${track_id}`,
+      },
+    });
+  }
 }
 const spotify = new spotifyWebAPI();
 

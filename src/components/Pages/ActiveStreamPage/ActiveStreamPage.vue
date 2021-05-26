@@ -36,12 +36,18 @@
       <ListenerList :isStreamer="isStreamer" />
     </div>
   </div>
+  <div class="row">
+    <div class="col-12 mt-1">
+      <Chat />
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ListenerList from "./components/ListenerList";
 import Player from "./components/Player";
+import Chat from "./components/Chat";
 import { copyToClipboard } from "../../../utils";
 
 export default {
@@ -50,7 +56,7 @@ export default {
       logoutHover: false,
     };
   },
-  components: { ListenerList, Player },
+  components: { ListenerList, Player, Chat },
   methods: {
     ...mapActions(["stop"]),
     ...mapMutations(["addAlert"]),

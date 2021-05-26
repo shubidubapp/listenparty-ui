@@ -6,7 +6,6 @@ import { APIUrlGen as _, constants } from "../../utils";
 const state = {
   spotifyToken: null,
   messages: [],
-  chatMessages: [],
   status: { activity: "NONE", username: null },
   streamUpdaterInterval: null,
   stream_data: null,
@@ -118,11 +117,6 @@ const actions = {
     commit("clearStreamInterval");
     socket.emit("stop", (data) => dispatch("handleSocketResponse", data));
   },
-  sendChatMessage: async ({ dispatch }, message) => {
-    socket.emit("chat_message", message, (data) =>
-      dispatch("handleSocketResponse", data)
-    );
-  },
   streamerUpdate: async ({ dispatch, state, commit }) => {
     const playbackStatus = await spotifyWebAPI.getState();
     if (!playbackStatus) return;
@@ -211,18 +205,15 @@ const actions = {
     }
     dispatch("handleSocketResponse", { status: status });
   },
-  socket_disconnect: async ({ dispatch }, data) => {
+  socket_disconnect: ({ dispatch }, data) => {
     dispatch("handleSocketResponse", data);
     dispatch("updateStatus");
   },
-  socket_response: async ({ dispatch }, data) => {
+  socket_response: ({ dispatch }, data) => {
     dispatch("handleSocketResponse", data);
   },
-  socket_status: async ({ dispatch }, data) => {
+  socket_status: ({ dispatch }, data) => {
     dispatch("handleSocketResponse", data);
-  },
-  socket_chatMessage: async ({ commit }, data) => {
-    commit("handleSocketResponse", data);
   },
 };
 
@@ -232,13 +223,6 @@ const mutations = {
     if (data.status) state.status = data.status;
     if (data.message) {
       state.messages.push(data.message);
-    }
-    if (data.chatMessage) {
-      if (Array.isArray(data.chatMessage)) {
-        state.chatMessages.push(...data.chatMessage);
-      } else {
-        state.chatMessages.push(data.chatMessage);
-      }
     }
   },
   removeMessage: (state, which) => {
