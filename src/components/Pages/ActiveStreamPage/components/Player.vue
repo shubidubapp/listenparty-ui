@@ -162,8 +162,9 @@ export default {
     },
   },
   sockets: {
-    add_queue(data) {
-      spotifyWebAPI.addQueue(data.track);
+    async add_queue(data, callback) {
+      await spotifyWebAPI.addQueue(data.track);
+      if (callback) callback({ status: "ok" });
     },
   },
   created() {
