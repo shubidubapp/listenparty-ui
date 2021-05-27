@@ -124,7 +124,7 @@ export default {
         if (match[1] === "dj" && match[2]) {
           this.$socket.client.emit("dj_add", {
             date: new Date().getTime() / 1000,
-            who: match[2].split(" ")[0],
+            who: match[2],
           });
         } else if (match[1] === "queue" && match[2]) {
           const track_id_result = match[2].match(trackIdRegex);
