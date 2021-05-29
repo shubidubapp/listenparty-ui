@@ -208,6 +208,7 @@ input.volume-slider[type="range"]::-webkit-slider-thumb {
   height: 0.5rem;
   outline: none;
   box-shadow: none;
+  margin-top: 0px;
 }
 
 input.volume-slider[type="range"]::-moz-range-thumb {
