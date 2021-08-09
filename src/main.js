@@ -9,6 +9,13 @@ import socket from "./socket-client";
 import store from "./store";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
+
+import {
+  faGithub,
+  faInstagram,
+  faLinkedin,
+} from "@fortawesome/free-brands-svg-icons";
+
 import {
   faMicrophoneAlt,
   faHeadphonesAlt,
@@ -22,7 +29,10 @@ library.add(
   faHeadphonesAlt,
   faTimesCircle,
   faVolumeUp,
-  faVolumeMute
+  faVolumeMute,
+  faGithub,
+  faInstagram,
+  faLinkedin
 );
 
 axios.defaults.withCredentials = true; // makes axios send and receive cookies
