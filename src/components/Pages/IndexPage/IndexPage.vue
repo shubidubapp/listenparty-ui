@@ -26,7 +26,7 @@
     for it kind of dissipated. Also I was a little late on the hype train. There
     are a few more of projects like this basically does the samething but
     visually a lot more polished. Even Spotify (the company) right now working
-    something similar but somehow <b>much shittier</b> version of this right
+    on something similar but somehow <b>much shittier</b> version of this right
     now.
   </p>
   <p class="card-text">
@@ -58,7 +58,7 @@
       If you are a <b>streamer</b>
       <ul>
         <li>Find a unique name for your stream. Found it? Cool.</li>
-        <li>Type your stream name to stream name input!</li>
+        <li>Type your stream name to stream name input.</li>
         <li>Click Stream!</li>
         <li>Open your official Spotify client</li>
         <li>Start a song and enjoy.</li>
@@ -69,8 +69,8 @@
       There are some chat commands
       <ul>
         <li>
-          /dj [listener name] -> Gives the listener to add more DJs and add
-          songs to the queue
+          /dj [listener name] -> Gives the listener the ability to add more DJs
+          and add songs to the queue
         </li>
         <li>
           /queue [song uri] -> Adds the song to the Spotify queue, if you have
