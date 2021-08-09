@@ -1,6 +1,8 @@
 <template>
   <footer class="py-1 mt-auto">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3 mt-4">
+    <ul
+      class="nav justify-content-center border-bottom border-dark pb-3 mb-3 mt-4"
+    >
       <li class="nav-item">
         <a
           target="_blank"

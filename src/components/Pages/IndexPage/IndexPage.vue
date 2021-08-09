@@ -143,7 +143,7 @@
   <p class="card-text">
     I am mostly using websockets to communicate with the server. When a streamer
     starts streaming a websocket room is created with the name and listeners
-    joins it.
+    join it.
   </p>
   <p class="card-text">
     Every few seconds the Streamer app client queries Spotify API to get current
