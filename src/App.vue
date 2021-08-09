@@ -31,11 +31,13 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import StreamBrowserPage from "./components/Pages/StreamBrowserPage/StreamBrowserPage";
 import ActiveStreamPage from "./components/Pages/ActiveStreamPage/ActiveStreamPage";
 import IndexPage from "./components/Pages/IndexPage/IndexPage";
@@ -49,6 +51,7 @@ export default {
     ActiveStreamPage,
     IndexPage,
     AlertTicker,
+    Footer,
   },
   methods: {
     ...mapMutations(["setwebPlayerUsable", "destroyWebPlayer"]),
@@ -71,6 +74,7 @@ export default {
 html,
 body {
   background-color: darkslategray;
+  min-height: 100vh;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
